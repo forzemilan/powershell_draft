@@ -5,7 +5,7 @@
 $today = get-date
 #tips: use commnd "$today.GetDateTimeFormats()" to list all date format in powershell
 $foldername = $today.GetDateTimeFormats()[6] 
-$path = "D:\TIM\"+$foldername+"\"
+$path = "E:\GPO-Backup"+$foldername+"\"
 new-item -ItemType Directory -Path $path
 
 #step 2:
@@ -13,8 +13,9 @@ new-item -ItemType Directory -Path $path
 backup-gpo -All -Path $path -Comment $foldername
 
 #step 3: archive backup files.
-$log_folder = ' "E:\GPO-Backup\"+$foldername'
-Compress-Archive -Path  $log_folder -CompressionLevel Optimal -DestinationPath $log_folder
+$zip_path = "E:\GPO-Backup\"+$foldername
+Compress-Archive -Path  $zip_path -CompressionLevel Optimal -DestinationPath $zip_path
 
-#step 4: remove backup files.
-Remove-Item -Path $log_folder -Recurse
+#step 4: remove backup files. add parameter force since the backup folder is
+#readonly
+Remove-Item -Path $zip_path -Recurse -force
