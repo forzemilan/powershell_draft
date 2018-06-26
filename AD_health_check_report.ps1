@@ -210,6 +210,7 @@ Select @{Label = "useraccountcontrol";Expression = {if (($_.useraccountcontrol -
     pass #not use any more
 
 #3  Result Summary
+    #default score is 100 and Weighting is as below value
 
 $props = @{
 "Domain Controller UAC Check" = 1
