@@ -168,6 +168,28 @@ Select @{Label = "useraccountcontrol";Expression = {if (($_.useraccountcontrol -
     #**********Orphaned objects were found, which should be checked and removed if they are not valid servers.
     #**********Overlapping subnets were detected. These subnets should be checked and the incorrect subnet removed.
 
+
+#2.15   Domain Controller Time Sync
+    #It is important that all domain controllers are time synchronised. Time differences of greater than 2 minutes may indicate a time synchronisation problem.
+    #Time offset relative to PDC
+    foreach ($i in $ADDomainReplicaDirectoryServers) {
+        $p_offset = (w32tm /monitor /computers:$i | findstr  "NTP:").trim() 
+        $p_offset = $p_offset.Split(' ')[1]
+        $props = @{
+            windowsTimeOffset = $p_offset
+            computerName = $i
+            PDC = "PDC_NAME"
+        }
+    $object = new-object psobject -Property $props
+    $object
+    }
+
+
+
+#2.16   Trust Validation Check
+
+
+
 #2.17 Domain Controller Time Service Check
 
 
