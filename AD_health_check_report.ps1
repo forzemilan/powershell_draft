@@ -191,10 +191,47 @@ Select @{Label = "useraccountcontrol";Expression = {if (($_.useraccountcontrol -
 
 
 #2.17 Domain Controller Time Service Check
+    # It is important that all domain controllers are time synchronised. This check ensures that the Windows Time service is installed and that only the root domain PDCE is configured to use an external time source.
+    foreach ($i in $ADDomainReplicaDirectoryServers) {
+        $w32tm_status = get-service -name "w32time" | select -Property status 
+        $ntp_source = (w32tm /query /computer:$i /status | findstr -i "source:").split(" ")[1]
 
+        $props = @{
+            w32tm_service_status = $w32tm_status.status.tostring()
+            computerName = $i
+            NTP_Source = $ntp_source
+        }
+        $object = new-object psobject -Property $props
+        $object
+        }
 
 #2.18 Domain Controller WINS Checks
 
+    pass #not use any more
 
+#3  Result Summary
+
+$props = @{
+"Domain Controller UAC Check" = 1
+"Domain Controller Disk Capacity" = 1
+"Domain Controller DNS Checks" =1
+"Domain Controller Advertising" = 1
+"Domain Controller Default Shares" = 1
+"Domain DFS Referral Configuration" = 1
+"Domain Functional Level" = 1
+"Domain FSMO Checks" = 1
+"Domain Group Policy Checks" = 4
+"Inactive Accounts Check" = 2
+"Domain Controller OS Version" = 1
+"Replication Error Check"= 1
+"Sites and Subnets Checks" = 6
+"Domain Controller Time Sync" = 1
+"Trust Validation Check" = 1
+"Domain Controller Time Service Check" = 1
+"Domain Controller WINS Checks" = 1
+}
+
+$object1 = New-Object psobject -Property $props
+$object1
         
 
