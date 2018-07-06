@@ -11,7 +11,7 @@
     
 #2.2  Domain Controller UAC check
     
-Get-ADComputer -SearchBase "OU=Domain Controllers,DC=AIA,DC=BIZ" -Filter * -Properties useraccountcontrol | 
+Get-ADComputer -SearchBase "OU=Domain Controllers,DC=xxx,DC=XXX" -Filter * -Properties useraccountcontrol | 
 
 Select @{Label = "useraccountcontrol";Expression = {if (($_.useraccountcontrol -eq '532480' -or $_.useraccountcontrol -eq '83890176')  ) {'correct'} Else {'warnning'}}},name
 
